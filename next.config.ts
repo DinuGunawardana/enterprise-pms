@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
    * for development HMR + stack traces
    */
   allowedDevOrigins: [
-    '10.14.0.2',
+    '192.168.8.159',
   ],
 };
 
