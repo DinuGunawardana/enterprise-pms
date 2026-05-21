@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useState } from 'react';
@@ -8,12 +9,13 @@ import {
   Loader2,
   Eye,
   EyeOff,
-  Lock,
 } from 'lucide-react';
 
-import { supabase } from '../../lib/supabase';
+import {
+  signUp,
+} from '../../../services/authService';
 
-export default function ResetPasswordPage() {
+export default function SignupPage() {
 
   /**
    * Router
@@ -23,6 +25,12 @@ export default function ResetPasswordPage() {
   /**
    * Form states
    */
+  const [fullName, setFullName] =
+    useState('');
+
+  const [email, setEmail] =
+    useState('');
+
   const [password, setPassword] =
     useState('');
 
@@ -57,16 +65,32 @@ export default function ResetPasswordPage() {
   ] = useState(false);
 
   /**
-   * Form validation
+   * Email validation
+   */
+  function isValidEmail(email: string) {
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      .test(email);
+  }
+
+  /**
+   * Password validation
    */
   function validateForm() {
 
     if (
+      !fullName ||
+      !email ||
       !password ||
       !confirmPassword
     ) {
 
       return 'Please fill all fields.';
+    }
+
+    if (!isValidEmail(email)) {
+
+      return 'Please enter a valid email.';
     }
 
     if (password.length < 8) {
@@ -85,9 +109,9 @@ export default function ResetPasswordPage() {
   }
 
   /**
-   * Handle password update
+   * Handle signup
    */
-  async function handleReset(
+  async function handleSignup(
     e: React.FormEvent
   ) {
 
@@ -117,26 +141,22 @@ export default function ResetPasswordPage() {
       setLoading(true);
 
       /**
-       * Update password
+       * Create account
        */
-      const { error } =
-        await supabase.auth.updateUser({
-          password,
-        });
-
-      if (error) {
-        throw error;
-      }
-
-      /**
-       * Success state
-       */
-      setSuccess(
-        'Password updated successfully.'
+      await signUp(
+        email,
+        password
       );
 
       /**
-       * Redirect to login
+       * Success message
+       */
+      setSuccess(
+        'Account created successfully. Please verify your email.'
+      );
+
+      /**
+       * Redirect after short delay
        */
       setTimeout(() => {
 
@@ -150,7 +170,7 @@ export default function ResetPasswordPage() {
 
       setError(
         error?.message ||
-        'Password reset failed.'
+        'Signup failed.'
       );
 
     } finally {
@@ -192,27 +212,6 @@ export default function ResetPasswordPage() {
         {/* Header */}
         <div className="mb-8 text-center">
 
-          <div
-            className="
-              mx-auto
-              mb-4
-              flex
-              h-14
-              w-14
-              items-center
-              justify-center
-              rounded-full
-              bg-indigo-500/20
-            "
-          >
-
-            <Lock
-              className="text-indigo-400"
-              size={26}
-            />
-
-          </div>
-
           <h1
             className="
               text-4xl
@@ -221,7 +220,7 @@ export default function ResetPasswordPage() {
               text-white
             "
           >
-            Reset Password
+            Create Account
           </h1>
 
           <p
@@ -231,16 +230,100 @@ export default function ResetPasswordPage() {
               text-slate-400
             "
           >
-            Enter your new password below.
+            Enterprise Project Management System
           </p>
 
         </div>
 
         {/* Form */}
         <form
-          onSubmit={handleReset}
+          onSubmit={handleSignup}
           className="space-y-5"
         >
+
+          {/* Full Name */}
+          <div>
+
+            <label
+              className="
+                mb-2
+                block
+                text-sm
+                font-medium
+                text-slate-300
+              "
+            >
+              Full Name
+            </label>
+
+            <input
+              type="text"
+              placeholder="John Doe"
+              value={fullName}
+              onChange={(e) =>
+                setFullName(e.target.value)
+              }
+              className="
+                w-full
+                rounded-xl
+                border
+                border-white/10
+                bg-white/5
+                px-4
+                py-3
+                text-white
+                placeholder:text-slate-500
+                outline-none
+                transition
+                focus:border-indigo-500
+                focus:ring-2
+                focus:ring-indigo-500/30
+              "
+            />
+
+          </div>
+
+          {/* Email */}
+          <div>
+
+            <label
+              className="
+                mb-2
+                block
+                text-sm
+                font-medium
+                text-slate-300
+              "
+            >
+              Email
+            </label>
+
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              className="
+                w-full
+                rounded-xl
+                border
+                border-white/10
+                bg-white/5
+                px-4
+                py-3
+                text-white
+                placeholder:text-slate-500
+                outline-none
+                transition
+                focus:border-indigo-500
+                focus:ring-2
+                focus:ring-indigo-500/30
+              "
+            />
+
+          </div>
 
           {/* Password */}
           <div>
@@ -254,7 +337,7 @@ export default function ResetPasswordPage() {
                 text-slate-300
               "
             >
-              New Password
+              Password
             </label>
 
             <div className="relative">
@@ -302,6 +385,7 @@ export default function ResetPasswordPage() {
                   top-1/2
                   -translate-y-1/2
                   text-slate-400
+                  transition
                   hover:text-white
                 "
               >
@@ -377,6 +461,7 @@ export default function ResetPasswordPage() {
                   top-1/2
                   -translate-y-1/2
                   text-slate-400
+                  transition
                   hover:text-white
                 "
               >
@@ -459,12 +544,38 @@ export default function ResetPasswordPage() {
 
             ) : (
 
-              'Update Password'
+              'Create Account'
             )}
 
           </button>
 
         </form>
+
+        {/* Footer */}
+        <div
+          className="
+            mt-6
+            text-center
+            text-sm
+            text-slate-400
+          "
+        >
+
+          Already have an account?{' '}
+
+          <Link
+            href="/login"
+            className="
+              font-medium
+              text-indigo-400
+              transition
+              hover:text-indigo-300
+            "
+          >
+            Login
+          </Link>
+
+        </div>
 
       </div>
 

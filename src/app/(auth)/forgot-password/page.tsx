@@ -11,7 +11,7 @@ import {
 
 import {
   forgotPassword,
-} from '../../services/authService';
+} from '../../../services/authService';
 
 export default function ForgotPasswordPage() {
 

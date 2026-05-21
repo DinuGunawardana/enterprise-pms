@@ -1,29 +1,39 @@
-import { createClient } from '@supabase/supabase-js';
+import {
+  createBrowserClient,
+} from '@supabase/ssr';
 
 /**
- * Gets Supabase project URL
- * from environment variables
+ * Browser-side Supabase client
  */
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL!;
+export const supabase =
+  createBrowserClient(
+    process.env
+      .NEXT_PUBLIC_SUPABASE_URL!,
 
-/**
- * Gets public anonymous key
- */
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    process.env
+      .NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 
-/**
- * Creates reusable Supabase client
- *
- * This client is used everywhere:
- * - auth
- * - database
- * - storage
- */
-export const supabase = createClient(
-  supabaseUrl,
-  supabaseAnonKey
-);
+    {
 
-// console.log(supabase);
+      auth: {
+
+        /**
+         * Required for:
+         * - password reset
+         * - magic links
+         * - recovery sessions
+         */
+        detectSessionInUrl: true,
+
+        /**
+         * Persist auth automatically
+         */
+        persistSession: true,
+
+        /**
+         * Refresh JWT automatically
+         */
+        autoRefreshToken: true,
+      },
+    }
+  );

@@ -1,21 +1,22 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { useState } from 'react';
+import {
+  useEffect,
+  useState,
+} from 'react';
 
 import {
   Loader2,
   Eye,
   EyeOff,
+  Lock,
 } from 'lucide-react';
 
-import {
-  signUp,
-} from '../../services/authService';
+import { supabase } from '../../../lib/supabase';
 
-export default function SignupPage() {
+export default function ResetPasswordPage() {
 
   /**
    * Router
@@ -25,12 +26,6 @@ export default function SignupPage() {
   /**
    * Form states
    */
-  const [fullName, setFullName] =
-    useState('');
-
-  const [email, setEmail] =
-    useState('');
-
   const [password, setPassword] =
     useState('');
 
@@ -65,32 +60,73 @@ export default function SignupPage() {
   ] = useState(false);
 
   /**
-   * Email validation
+   * Exchanges recovery code
+   * for authenticated session
    */
-  function isValidEmail(email: string) {
+  useEffect(() => {
 
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      .test(email);
-  }
+    async function exchangeCode() {
+
+      /**
+       * Read recovery code
+       * from URL
+       */
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      const code =
+        params.get('code');
+
+      /**
+       * Invalid link
+       */
+      if (!code) {
+
+        setError(
+          'Invalid or expired reset link.'
+        );
+
+        return;
+      }
+
+      /**
+       * Exchange recovery code
+       * for temporary session
+       */
+      const {
+        error,
+      } =
+        await supabase.auth.exchangeCodeForSession(
+          code
+        );
+
+      if (error) {
+
+        console.error(error);
+
+        setError(
+          'Reset link expired or invalid.'
+        );
+      }
+    }
+
+    exchangeCode();
+
+  }, []);
 
   /**
-   * Password validation
+   * Form validation
    */
   function validateForm() {
 
     if (
-      !fullName ||
-      !email ||
       !password ||
       !confirmPassword
     ) {
 
       return 'Please fill all fields.';
-    }
-
-    if (!isValidEmail(email)) {
-
-      return 'Please enter a valid email.';
     }
 
     if (password.length < 8) {
@@ -109,9 +145,9 @@ export default function SignupPage() {
   }
 
   /**
-   * Handle signup
+   * Handle password update
    */
-  async function handleSignup(
+  async function handleReset(
     e: React.FormEvent
   ) {
 
@@ -141,26 +177,31 @@ export default function SignupPage() {
       setLoading(true);
 
       /**
-       * Create account
+       * Update password
        */
-      await signUp(
-        email,
-        password
-      );
+      const { error } =
+        await supabase.auth.updateUser({
+          password,
+        });
+
+      if (error) {
+        throw error;
+      }
 
       /**
-       * Success message
+       * Success state
        */
       setSuccess(
-        'Account created successfully. Please verify your email.'
+        'Password updated successfully.'
       );
 
       /**
-       * Redirect after short delay
+       * Redirect to login
        */
       setTimeout(() => {
 
-        router.push('/login');
+        // router.push('/login');
+        window.location.href = '/login';
 
       }, 2500);
 
@@ -170,7 +211,7 @@ export default function SignupPage() {
 
       setError(
         error?.message ||
-        'Signup failed.'
+        'Password reset failed.'
       );
 
     } finally {
@@ -212,6 +253,27 @@ export default function SignupPage() {
         {/* Header */}
         <div className="mb-8 text-center">
 
+          <div
+            className="
+              mx-auto
+              mb-4
+              flex
+              h-14
+              w-14
+              items-center
+              justify-center
+              rounded-full
+              bg-indigo-500/20
+            "
+          >
+
+            <Lock
+              className="text-indigo-400"
+              size={26}
+            />
+
+          </div>
+
           <h1
             className="
               text-4xl
@@ -220,7 +282,7 @@ export default function SignupPage() {
               text-white
             "
           >
-            Create Account
+            Reset Password
           </h1>
 
           <p
@@ -230,100 +292,16 @@ export default function SignupPage() {
               text-slate-400
             "
           >
-            Enterprise Project Management System
+            Enter your new password below.
           </p>
 
         </div>
 
         {/* Form */}
         <form
-          onSubmit={handleSignup}
+          onSubmit={handleReset}
           className="space-y-5"
         >
-
-          {/* Full Name */}
-          <div>
-
-            <label
-              className="
-                mb-2
-                block
-                text-sm
-                font-medium
-                text-slate-300
-              "
-            >
-              Full Name
-            </label>
-
-            <input
-              type="text"
-              placeholder="John Doe"
-              value={fullName}
-              onChange={(e) =>
-                setFullName(e.target.value)
-              }
-              className="
-                w-full
-                rounded-xl
-                border
-                border-white/10
-                bg-white/5
-                px-4
-                py-3
-                text-white
-                placeholder:text-slate-500
-                outline-none
-                transition
-                focus:border-indigo-500
-                focus:ring-2
-                focus:ring-indigo-500/30
-              "
-            />
-
-          </div>
-
-          {/* Email */}
-          <div>
-
-            <label
-              className="
-                mb-2
-                block
-                text-sm
-                font-medium
-                text-slate-300
-              "
-            >
-              Email
-            </label>
-
-            <input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              className="
-                w-full
-                rounded-xl
-                border
-                border-white/10
-                bg-white/5
-                px-4
-                py-3
-                text-white
-                placeholder:text-slate-500
-                outline-none
-                transition
-                focus:border-indigo-500
-                focus:ring-2
-                focus:ring-indigo-500/30
-              "
-            />
-
-          </div>
 
           {/* Password */}
           <div>
@@ -337,7 +315,7 @@ export default function SignupPage() {
                 text-slate-300
               "
             >
-              Password
+              New Password
             </label>
 
             <div className="relative">
@@ -385,7 +363,6 @@ export default function SignupPage() {
                   top-1/2
                   -translate-y-1/2
                   text-slate-400
-                  transition
                   hover:text-white
                 "
               >
@@ -461,7 +438,6 @@ export default function SignupPage() {
                   top-1/2
                   -translate-y-1/2
                   text-slate-400
-                  transition
                   hover:text-white
                 "
               >
@@ -544,38 +520,12 @@ export default function SignupPage() {
 
             ) : (
 
-              'Create Account'
+              'Update Password'
             )}
 
           </button>
 
         </form>
-
-        {/* Footer */}
-        <div
-          className="
-            mt-6
-            text-center
-            text-sm
-            text-slate-400
-          "
-        >
-
-          Already have an account?{' '}
-
-          <Link
-            href="/login"
-            className="
-              font-medium
-              text-indigo-400
-              transition
-              hover:text-indigo-300
-            "
-          >
-            Login
-          </Link>
-
-        </div>
 
       </div>
 

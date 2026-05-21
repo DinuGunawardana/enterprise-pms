@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 import {
   FormEvent,
@@ -11,7 +11,7 @@ import {
 
 import {
   login,
-} from '../../services/authService';
+} from '../../../services/authService';
 
 export default function LoginPage() {
 
@@ -20,7 +20,7 @@ export default function LoginPage() {
    *
    * Used for redirects
    */
-  const router = useRouter();
+  // const router = useRouter();
 
   /**
    * Form state
@@ -79,28 +79,41 @@ export default function LoginPage() {
        */
       setLoading(true);
 
-      /**
-       * Call auth service
-       */
-      await login(
-        email,
-        password
-      );
+      // /**
+      //  * Call auth service
+      //  */
+      // await login(
+      //   email,
+      //   password
+      // );
+
+      // /**
+      //  * Redirect after success
+      //  */
+      // router.push('/dashboard');
+
+      await login(email, password);
 
       /**
-       * Redirect after success
+       * Refresh app state
+       * so middleware sees session cookie
        */
-      router.push('/dashboard');
+      // router.refresh();
+      window.location.href = '/dashboard';
 
-    } catch (err: any) {
+    } catch (err: unknown) {
 
       /**
        * Supabase error handling
        */
-      setError(
-        err.message ||
-        'Login failed'
-      );
+      if (err instanceof Error) {
+
+        setError(err.message);
+
+      } else {
+
+        setError('Login failed');
+      }
 
     } finally {
 

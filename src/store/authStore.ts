@@ -1,35 +1,54 @@
 import { create } from 'zustand';
 
-/**
- * Enterprise user structure
- */
-interface User {
+import { Session, User } from '@supabase/supabase-js';
 
-  id: string;
-
-  email: string;
-
-  full_name?: string;
-
-  role?: string;
-}
-
-/**
- * Authentication state structure
- */
 interface AuthState {
 
   /**
-   * Current logged in user
+   * Current authenticated user
    */
   user: User | null;
 
   /**
-   * Updates current user
+   * Current session
+   */
+  session: Session | null;
+
+  /**
+   * Loading state
+   */
+  loading: boolean;
+
+  /**
+   * Authenticated state
+   */
+  isAuthenticated: boolean;
+
+  /**
+   * Set current user
    */
   setUser: (
     user: User | null
   ) => void;
+
+  /**
+   * Set session
+   */
+  setSession: (
+    session: Session | null
+  ) => void;
+
+  /**
+   * Set loading
+   */
+  setLoading: (
+    loading: boolean
+  ) => void;
+
+  /**
+   * Clears auth state
+   */
+  clearAuth: () => void;
 }
 
 /**
@@ -38,19 +57,35 @@ interface AuthState {
 export const useAuthStore =
   create<AuthState>((set) => ({
 
-    /**
-     * Default state
-     */
     user: null,
 
-    /**
-     * Updates user globally
-     */
-    setUser: (
-      user: User | null
-    ) =>
+    session: null,
+
+    loading: true,
+
+    isAuthenticated: false,
+
+    setUser: (user) =>
       set({
         user,
+        isAuthenticated: !!user,
+      }),
+
+    setSession: (session) =>
+      set({
+        session,
+      }),
+
+    setLoading: (loading) =>
+      set({
+        loading,
+      }),
+
+    clearAuth: () =>
+      set({
+        user: null,
+        session: null,
+        isAuthenticated: false,
       }),
   }));
 
