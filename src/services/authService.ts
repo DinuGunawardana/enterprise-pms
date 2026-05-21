@@ -55,17 +55,43 @@ export async function forgotPassword(
   email: string
 ) {
 
-  const { data, error } =
-    await supabase.auth.resetPasswordForEmail(
-      email
-    );
+  const {
+    error,
+  } = await supabase.auth.resetPasswordForEmail(
+    email,
+    {
+
+      /**
+       * Redirect after password reset
+       */
+      redirectTo:
+        'http://localhost:3000/reset-password',
+    }
+  );
 
   if (error) {
     throw error;
   }
-
-  return data;
 }
+
+// /**
+//  * Sends password reset email
+//  */
+// export async function forgotPassword(
+//   email: string
+// ) {
+
+//   const { data, error } =
+//     await supabase.auth.resetPasswordForEmail(
+//       email
+//     );
+
+//   if (error) {
+//     throw error;
+//   }
+
+//   return data;
+// }
 
 /**
  * Logs user out
