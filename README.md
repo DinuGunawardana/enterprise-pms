@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Enterprise PMS — Frontend Foundation
 
-## Getting Started
+A new frontend-only implementation of the Enterprise Project Management System, based on Master Project Plan v1.1.
 
-First, run the development server:
+## Current scope
+
+- Next.js App Router + React + TypeScript
+- Tailwind CSS v4
+- Responsive application shell
+- Dashboard with clearly labelled demonstration data
+- Sidebar navigation for planned PMS modules
+- No Supabase connection
+- No Google Drive connection
+- No real authentication or authorization
+
+## Requirements
+
+- Node.js 20.9 or later
+- npm
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Production build check
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+```
 
-## Learn More
+## Architecture rule
 
-To learn more about Next.js, take a look at the following resources:
+UI components must not import mock data directly. Pages consume feature services under `src/services/`. The current services return local demo fixtures. Later, implementations can be replaced with Supabase-backed services and a server-side Google Drive adapter without coupling those providers to UI components.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Important
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This is a frontend prototype foundation, not a secure production application. Demo data and navigation visibility are not access controls. Do not enter real employee, project, or confidential company information.
 
-## Deploy on Vercel
+## Planned frontend modules
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Application shell and design system
+2. Dashboard
+3. Projects and project details
+4. Tasks, task details and Kanban
+5. Calendar
+6. Document management interface
+7. Collaboration
+8. Users and departments
+9. Notifications
+10. Reports and settings
