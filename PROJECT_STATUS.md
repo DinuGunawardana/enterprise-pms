@@ -1,20 +1,19 @@
-# Project Status — Stage 4
+# Enterprise PMS — Project Status
 
-## Completed in this frontend package
-- Stage 1 foundation and Stage 2 dashboard/design system retained.
-- Stage 3 project management retained.
-- Stage 4 task list, task details, CRUD, assignment, dates, priorities, statuses, filters, sorting, Kanban drag-and-drop, subtasks and project-specific task pages added.
+## Frontend implementation stages
+- Stage 1: Foundation — implemented.
+- Stage 2: Design system and dashboard — implemented; user reported production build passed.
+- Stage 3: Project management — implemented; user confirmed working.
+- Stage 4: Task management — implemented; user reported 94/94 acceptance checks passed.
+- Stage 5: People, teams, departments and role hierarchy — implementation package delivered; user acceptance confirmation pending.
+- Stage 6: Calendar — corrected package delivered; user acceptance/build confirmation pending.
+- Stage 7: Document management — frontend prototype implemented in this package; user acceptance/build confirmation pending.
 
-## Current architecture
-- Next.js App Router + TypeScript + Tailwind CSS.
-- Demo persistence through browser localStorage.
-- Task service abstraction at `src/services/taskService.ts` and hook at `src/hooks/useTasks.ts`.
-- No Supabase or Google Drive connection yet.
+## Current technical state
+- Next.js App Router, TypeScript, React, Tailwind CSS.
+- Demo persistence uses browser localStorage.
+- Supabase authentication/database and server-side authorization are not connected in this frontend prototype.
+- Google Drive is not connected. Document file data is local browser storage for prototype testing only.
 
-## Next recommended stage
-- Stage 5: task collaboration (comments, activity history, attachments UI) or the agreed next module from the master plan.
-
-## Production caveats
-- No server-side authorization or shared database.
-- No real employee directory or notifications.
-- Native browser drag-and-drop is used; keyboard-accessible drag controls and touch-specific sorting are not yet included.
+## Security reminder
+Frontend visibility labels, role labels, and sharing controls are not security controls. Production document access must be enforced by authenticated server-side services and PostgreSQL RLS before any Google Drive operation.

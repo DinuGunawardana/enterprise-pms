@@ -32,3 +32,9 @@ This is still a frontend-only demo. Data is stored separately in each browser an
 - Existing Stage 3 project functionality is retained.
 - Existing task data from the dashboard is not automatically migrated; Stage 4 has its own task store.
 - If you previously ran another copy of this app, open the extracted Stage 4 folder and run the commands from that folder.
+
+## Stage 7 — Document management
+
+The `/documents` route provides a local prototype for document notes, small file uploads, department/project associations, visibility metadata, explicit sharing permissions, search, filters, archive/restore, preview, and download. See `STAGE_7_NOTES.md` for setup expectations, limitations, and acceptance checks.
+
+**Prototype warning:** document metadata and uploaded file data are stored in the current browser's localStorage. Visibility and sharing are not secure access controls. Do not use confidential files. Google Drive and Supabase integration are not part of this frontend-only stage.
