@@ -1,0 +1,3 @@
+import {initialDepartments,initialEmployees} from "@/data/people";import type {Department,Employee} from "@/types";
+const P="nexus-pms-employees-v1",D="nexus-pms-departments-v1";function load<T>(k:string,f:T):T{if(typeof window==="undefined")return f;try{const x=localStorage.getItem(k);return x?JSON.parse(x) as T:f}catch{return f}}
+export const loadEmployees=()=>load<Employee[]>(P,initialEmployees);export const loadDepartments=()=>load<Department[]>(D,initialDepartments);export const saveEmployees=(x:Employee[])=>{if(typeof window!=="undefined")localStorage.setItem(P,JSON.stringify(x))};export const saveDepartments=(x:Department[])=>{if(typeof window!=="undefined")localStorage.setItem(D,JSON.stringify(x))};

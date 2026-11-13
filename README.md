@@ -1,56 +1,34 @@
-# Enterprise PMS — Frontend Foundation
+# Enterprise PMS — Frontend Stage 4
 
-A new frontend-only implementation of the Enterprise Project Management System, based on Master Project Plan v1.1.
-
-## Current scope
-
-- Next.js App Router + React + TypeScript
-- Tailwind CSS v4
-- Responsive application shell
-- Dashboard with clearly labelled demonstration data
-- Sidebar navigation for planned PMS modules
-- No Supabase connection
-- No Google Drive connection
-- No real authentication or authorization
-
-## Requirements
-
-- Node.js 20.9 or later
-- npm
+Stage 4 adds the Task Management Module on top of the working Stage 3 frontend.
 
 ## Run locally
 
-```bash
-npm install
-npm run dev
-```
+1. Extract this ZIP into a new folder (keep a backup of your working Stage 3 folder).
+2. Open the extracted project folder in VS Code.
+3. Run `npm install`.
+4. Run `npm run dev`.
+5. Open `http://localhost:3000` (or the LAN URL printed by Next.js).
 
-Open http://localhost:3000.
+## Stage 4 features
 
-## Production build check
+- Task list at `/tasks` and project-specific task list at `/projects/[projectId]/tasks`.
+- Create, edit, view and delete tasks.
+- Assignee, reporter, start date, due date, priority, status and comma-separated labels.
+- Search by task title, ID, description, assignee and labels.
+- Filters by project, status, priority and assignee; sorting by due date, priority, name and last update.
+- Kanban board with native drag-and-drop across To do, In progress, In review and Done.
+- Subtasks with completion checkboxes and progress indicators.
+- Task status can also be changed from the table and detail view.
+- Task data is persisted in browser `localStorage` under `nexus-pms-demo-tasks`.
+- Project detail pages include a shortcut to their project-specific task view.
 
-```bash
-npm run lint
-npm run build
-```
+## Important limitations
 
-## Architecture rule
+This is still a frontend-only demo. Data is stored separately in each browser and is not shared between users. Assignee options are demo users, not a live employee directory. Permissions, notifications, audit history, file attachments, backend validation and Supabase persistence are not implemented. Do not treat the local demo as production data.
 
-UI components must not import mock data directly. Pages consume feature services under `src/services/`. The current services return local demo fixtures. Later, implementations can be replaced with Supabase-backed services and a server-side Google Drive adapter without coupling those providers to UI components.
+## Notes
 
-## Important
-
-This is a frontend prototype foundation, not a secure production application. Demo data and navigation visibility are not access controls. Do not enter real employee, project, or confidential company information.
-
-## Planned frontend modules
-
-1. Application shell and design system
-2. Dashboard
-3. Projects and project details
-4. Tasks, task details and Kanban
-5. Calendar
-6. Document management interface
-7. Collaboration
-8. Users and departments
-9. Notifications
-10. Reports and settings
+- Existing Stage 3 project functionality is retained.
+- Existing task data from the dashboard is not automatically migrated; Stage 4 has its own task store.
+- If you previously ran another copy of this app, open the extracted Stage 4 folder and run the commands from that folder.

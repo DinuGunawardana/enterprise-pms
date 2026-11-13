@@ -1,3 +1,11 @@
 import type { NextConfig } from "next";
-const nextConfig: NextConfig = {};
+
+const nextConfig: NextConfig = {
+  allowedDevOrigins: ["192.168.8.159"],
+};
+
 export default nextConfig;
+
+// import type { NextConfig } from "next";
+// const nextConfig: NextConfig = {};
+// export default nextConfig;
