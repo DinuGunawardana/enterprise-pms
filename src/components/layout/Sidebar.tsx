@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Bell, CalendarDays, ChevronDown, CircleHelp, FileText, FolderKanban, LayoutDashboard, ListTodo, Settings, Users, Workflow, X } from "lucide-react";
+import { Activity, Bell, CalendarDays, ChevronDown, CircleHelp, FileText, FolderKanban, LayoutDashboard, ListTodo, Settings, Users, Workflow, X, MessagesSquare } from "lucide-react";
 
 const mainLinks = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -9,6 +9,7 @@ const mainLinks = [
   { href: "/tasks", label: "My Tasks", icon: ListTodo },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/documents", label: "Documents", icon: FileText },
+  { href: "/collaboration", label: "Collaboration", icon: MessagesSquare },
 ];
 const workspaceLinks = [
   { href: "/team", label: "People & Teams", icon: Users },

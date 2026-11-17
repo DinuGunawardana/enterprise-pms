@@ -13,7 +13,7 @@ const MAX_FILE_BYTES=2*1024*1024;
 // Generate IDs even in browsers/contexts without createDocumentId().
 function createDocumentId(){
   if(typeof globalThis.crypto!="undefined" && typeof globalThis.crypto.randomUUID==="function"){
-    return globalThis.createDocumentId();
+    return globalThis.crypto.randomUUID();
   }
   return `doc-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,12)}`;
 }

@@ -17,3 +17,8 @@
 
 ## Security reminder
 Frontend visibility labels, role labels, and sharing controls are not security controls. Production document access must be enforced by authenticated server-side services and PostgreSQL RLS before any Google Drive operation.
+
+## Stage 8 — Collaboration
+- Added a collaboration workspace with channels, project-linked posts, replies, reactions and search.
+- Added browser-local persistence and sidebar navigation.
+- This is a frontend prototype; real multi-user collaboration, notifications and authorization require backend integration.
